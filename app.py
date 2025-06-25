@@ -60,7 +60,6 @@ if not df.empty:
     if not filtered_df.empty:
         # Summary metrics
         balance = filtered_df['Balance'].iloc[-1]
-        last_day_pnl = filtered_df['PnL'].iloc[-1]
         monthly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(months=1)]['PnL'].sum()
         yearly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(years=1)]['PnL'].sum()
 
@@ -72,10 +71,10 @@ if not df.empty:
         # KPI Cards
         col1, col2, col3, col4, col5 = st.columns(5)
         col1.metric("Balance", f"${balance:,.2f}")
-        col2.metric("Last Day PnL", f"${last_day_pnl:,.2f}", delta=f"{(last_day_pnl / balance * 100):.2f}%")
-        col3.metric("PnL This Month", f"${monthly_pnl:,.2f}")
-        col4.metric("PnL This Year", f"${yearly_pnl:,.2f}")
-        col5.metric("Win Rate", f"{win_rate:.2f}%")
+        col2.metric("PnL This Month", f"${monthly_pnl:,.2f}")
+        col3.metric("PnL This Year", f"${yearly_pnl:,.2f}")
+        col4.metric("Win Rate", f"{win_rate:.2f}%")
+        col5.metric("Total Trades", f"{total_trades}")
 
         # PnL Summary Chart as Line Graph
         st.subheader("PnL Over Time")
