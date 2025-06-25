@@ -88,9 +88,18 @@ if not df.empty:
         ax.legend()
         st.pyplot(fig)
 
-        # Optional: Show raw data
+        # Optional: Show raw data with delete/edit options
         with st.expander("📄 Raw Data"):
-            st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
+            editable_df = filtered_df.reset_index(drop=True)
+            st.dataframe(editable_df.style.set_properties(**{'text-align': 'left'}), use_container_width=True)
+
+            row_to_delete = st.number_input("Enter row number to delete (starting at 1):", min_value=1, max_value=len(editable_df), step=1)
+            if st.button("Delete Selected Row"):
+                index_to_delete = editable_df.index[row_to_delete - 1]
+                full_index = filtered_df.index[index_to_delete]
+                df = df.drop(index=full_index)
+                df.to_csv(DATA_FILE, index=False)
+                st.success(f"Row {row_to_delete} deleted successfully. Please refresh the app.")
     else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
