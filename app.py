@@ -18,9 +18,6 @@ if os.path.exists(DATA_FILE):
 else:
     df = pd.DataFrame(columns=['Date', 'Time', 'Trade Type', 'Description', 'PnL', 'Balance'])
 
-# Add new entry
-
-
 # Display dashboard if data exists
 if not df.empty:
     df['Date'] = pd.to_datetime(df['Date'])
@@ -70,17 +67,34 @@ if not df.empty:
         ax.legend()
         st.pyplot(fig)
 
-        # Optional: Show raw data
-        st.subheader("📄 Raw Data")
-        st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
+    # Raw data view (always visible)
+    st.subheader("📄 Raw Data")
+    st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
 
-        # Trade Entry Section at Bottom
-        st.subheader("➕ Add New Trade Entry")
-        with st.form("trade_form"):
-            date = st.date_input("Date", value=datetime.today())
-            trade_time = st.time_input("Time", value=datetime.now().time())
-            trade_type = st.selectbox("Trade Type", ["Long", "Short"])
-            description = st.text_input("Description")
-            pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
-            balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
-            submitted = st.form_submit_button("Add Trade")
+# Trade Entry Section
+st.subheader("➕ Add New Trade Entry")
+with st.form("trade_form"):
+    date = st.date_input("Date", value=datetime.today())
+    trade_time = st.time_input("Time", value=datetime.now().time())
+    trade_type = st.selectbox("Trade Type", ["Long", "Short"])
+    description = st.text_input("Description")
+    pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
+    balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
+    submitted = st.form_submit_button("Add Trade")
+
+if submitted:
+    timestamp = pd.to_datetime(f"{date} {trade_time}")
+    new_row = pd.DataFrame({
+        'Date': [timestamp],
+        'Time': [trade_time.strftime("%H:%M:%S")],
+        'Trade Type': [trade_type],
+        'Description': [description],
+        'PnL': [pnl],
+        'Balance': [balance]
+    })
+    df = pd.concat([df, new_row], ignore_index=True)
+    df.sort_values('Date', inplace=True)
+    df.to_csv(DATA_FILE, index=False)
+    st.success("✅ Trade added successfully!")
+else:
+    st.info("👈 Add your first trade using the form above.")
