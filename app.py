@@ -97,7 +97,7 @@ if not filtered_df.empty:
         # Optional: Show raw data
         with st.expander("📄 Raw Data"):
             st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
-    else:
+else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
     st.info("👈 Add your first trade using the form on the left.")
