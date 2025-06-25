@@ -94,3 +94,5 @@ if not df.empty:
         st.warning("⚠️ No data available for the selected filters.")
 else:
     st.info("👈 Add your first trade using the form on the left.")
+
+
