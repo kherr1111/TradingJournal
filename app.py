@@ -109,6 +109,5 @@ if submitted:
     df.sort_values('Date', inplace=True)
     df.to_csv(DATA_FILE, index=False)
     st.success("✅ Trade added successfully!")
-    st.rerun()
 else:
     st.info("👈 Add your first trade using the form above.")
