@@ -115,7 +115,7 @@ if not df.empty:
                     df.at[index_to_edit, 'PnL'] = new_pnl
                     df.at[index_to_edit, 'Balance'] = new_bal
                     df.to_csv(DATA_FILE, index=False)
-                    st.success(f"Trade #{row_to_edit} updated. Please refresh to see changes.")
+                    st.rerun()
     else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
