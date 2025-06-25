@@ -49,11 +49,13 @@ if not df.empty:
     df['Date'] = pd.to_datetime(df['Date'])
     df.sort_values('Date', inplace=True)
 
-    # Date range filter
-    st.sidebar.header("Filter by Date Range")
+    # Sidebar filters
+    st.sidebar.header("Filters")
     start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
     end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
-    filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date))]
+    trade_type_filter = st.sidebar.multiselect("Trade Type", options=df['Trade Type'].unique().tolist(), default=df['Trade Type'].unique().tolist())
+
+    filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
     if not filtered_df.empty:
         # Summary metrics
@@ -62,12 +64,18 @@ if not df.empty:
         monthly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(months=1)]['PnL'].sum()
         yearly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(years=1)]['PnL'].sum()
 
+        # Win rate calculation
+        total_trades = len(filtered_df)
+        winning_trades = len(filtered_df[filtered_df['PnL'] > 0])
+        win_rate = (winning_trades / total_trades) * 100 if total_trades > 0 else 0
+
         # KPI Cards
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         col1.metric("Balance", f"${balance:,.2f}")
         col2.metric("Last Day PnL", f"${last_day_pnl:,.2f}", delta=f"{(last_day_pnl / balance * 100):.2f}%")
         col3.metric("PnL This Month", f"${monthly_pnl:,.2f}")
         col4.metric("PnL This Year", f"${yearly_pnl:,.2f}")
+        col5.metric("Win Rate", f"{win_rate:.2f}%")
 
         # PnL Summary Chart as Line Graph
         st.subheader("PnL Over Time")
@@ -83,7 +91,6 @@ if not df.empty:
         with st.expander("📄 Raw Data"):
             st.dataframe(filtered_df)
     else:
-        st.warning("⚠️ No data available for the selected date range.")
+        st.warning("⚠️ No data available for the selected filters.")
 else:
     st.info("👈 Add your first trade using the form on the left.")
-    
