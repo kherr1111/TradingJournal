@@ -37,9 +37,8 @@ if not df.empty:
     df.sort_values('Date', inplace=True)
 
     # Sidebar filters
-    st.sidebar.markdown("---")
-st.sidebar.header("Filters")
-start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
+    st.sidebar.header("Filters")
+    start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
     end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_filter = st.sidebar.multiselect(
@@ -72,8 +71,7 @@ start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
         col5.metric("Total Trades", f"{total_trades}")
 
         # PnL Summary Chart as Line Graph
-        st.markdown("---")
-st.subheader("PnL Over Time")
+        st.subheader("PnL Over Time")
 st.markdown("---")
         fig, ax = plt.subplots(figsize=(12, 4))
         ax.plot(filtered_df['Date'], filtered_df['PnL'].cumsum(), marker='o', linestyle='-', color='teal', label='Cumulative PnL')
