@@ -56,6 +56,7 @@ if not df.empty:
     end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
+    trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_filter = st.sidebar.multiselect(
         "Trade Type",
         options=trade_type_options,
