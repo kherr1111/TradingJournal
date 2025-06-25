@@ -58,6 +58,7 @@ if not df.empty:
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
+    trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_filter = st.sidebar.multiselect(
         "Trade Type",
         options=trade_type_options,
