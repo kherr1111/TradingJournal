@@ -10,9 +10,9 @@ RESET_TRIGGER = "Reset Metrics"
 DATA_FILE = "trades.csv"
 
 # Title
-if st.sidebar.button("🔁 Reset All Trades"):
-    confirm = st.sidebar.checkbox("Confirm reset?")
-    if confirm:
+confirm = st.sidebar.checkbox("Confirm reset?")
+if confirm:
+    if st.sidebar.button("🔁 Reset All Trades"):
         if os.path.exists(DATA_FILE):
             os.remove(DATA_FILE)
         st.rerun()
