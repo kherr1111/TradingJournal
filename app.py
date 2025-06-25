@@ -90,7 +90,7 @@ if not df.empty:
 
         # Optional: Show raw data
         with st.expander("📄 Raw Data"):
-            st.dataframe(filtered_df)
+            st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
     else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
