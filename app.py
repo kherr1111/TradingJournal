@@ -88,17 +88,34 @@ if not df.empty:
         ax.legend()
         st.pyplot(fig)
 
-        # Optional: Show raw data with delete option
+        # Optional: Show raw data with edit option
         with st.expander("📄 Raw Data"):
             editable_df = filtered_df.reset_index(drop=True)
-            st.dataframe(editable_df.style.set_properties(**{'text-align': 'left'}), use_container_width=True)
+            st.dataframe(editable_df.reset_index(drop=True).rename(lambda x: x + 1))
 
-            delete_index = st.number_input("Enter row number to delete (starting at 1):", min_value=1, max_value=len(editable_df), step=1)
-            if st.button("Delete Trade"):
-                original_index = filtered_df.index[delete_index - 1]
-                df = df.drop(index=original_index)
-                df.to_csv(DATA_FILE, index=False)
-                st.success(f"Trade #{delete_index} deleted. Please refresh the page to see changes.")
+            row_to_edit = st.number_input("Enter row number to edit (starting at 1):", min_value=1, max_value=len(editable_df), step=1)
+            if st.button("Edit Selected Row"):
+                index_to_edit = filtered_df.index[row_to_edit - 1]
+                row_data = df.loc[index_to_edit]
+
+                with st.form("edit_form"):
+                    new_date = st.date_input("Edit Date", value=row_data['Date'].date())
+                    new_time = st.time_input("Edit Time", value=pd.to_datetime(row_data['Time']).time())
+                    new_type = st.selectbox("Edit Trade Type", ["Long", "Short"], index=0 if row_data['Trade Type'] == 'Long' else 1)
+                    new_desc = st.text_input("Edit Description", value=row_data['Description'])
+                    new_pnl = st.number_input("Edit PnL ($)", value=float(row_data['PnL']), step=0.01, format="%.2f")
+                    new_bal = st.number_input("Edit Balance ($)", value=float(row_data['Balance']), step=0.01, format="%.2f")
+                    save_changes = st.form_submit_button("Save Changes")
+
+                if save_changes:
+                    df.at[index_to_edit, 'Date'] = pd.to_datetime(f"{new_date} {new_time}")
+                    df.at[index_to_edit, 'Time'] = new_time.strftime("%H:%M:%S")
+                    df.at[index_to_edit, 'Trade Type'] = new_type
+                    df.at[index_to_edit, 'Description'] = new_desc
+                    df.at[index_to_edit, 'PnL'] = new_pnl
+                    df.at[index_to_edit, 'Balance'] = new_bal
+                    df.to_csv(DATA_FILE, index=False)
+                    st.success(f"Trade #{row_to_edit} updated. Please refresh to see changes.")
     else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
