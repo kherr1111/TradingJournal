@@ -25,6 +25,7 @@ with st.sidebar.form("trade_form"):
 # Load or create CSV
 if os.path.exists(DATA_FILE):
     df = pd.read_csv(DATA_FILE, parse_dates=['Date'])
+df['Trade Type'].fillna('Unknown', inplace=True)
 else:
     df = pd.DataFrame(columns=['Date', 'Time', 'Trade Type', 'Description', 'PnL', 'Balance'])
 
@@ -53,7 +54,12 @@ if not df.empty:
     st.sidebar.header("Filters")
     start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
     end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
-    trade_type_filter = st.sidebar.multiselect("Trade Type", options=df['Trade Type'].unique().tolist(), default=df['Trade Type'].unique().tolist())
+    trade_type_options = df['Trade Type'].dropna().unique().tolist()
+    trade_type_filter = st.sidebar.multiselect(
+        "Trade Type",
+        options=trade_type_options,
+        default=trade_type_options
+    ).tolist(), default=df['Trade Type'].unique().tolist())
 
     filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
