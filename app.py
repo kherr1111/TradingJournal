@@ -88,9 +88,17 @@ if not df.empty:
         ax.legend()
         st.pyplot(fig)
 
-        # Optional: Show raw data
+        # Optional: Show raw data with delete option
         with st.expander("📄 Raw Data"):
-            st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
+            editable_df = filtered_df.reset_index(drop=True)
+            st.dataframe(editable_df.style.set_properties(**{'text-align': 'left'}), use_container_width=True)
+
+            delete_index = st.number_input("Enter row number to delete (starting at 1):", min_value=1, max_value=len(editable_df), step=1)
+            if st.button("Delete Trade"):
+                original_index = filtered_df.index[delete_index - 1]
+                df = df.drop(index=original_index)
+                df.to_csv(DATA_FILE, index=False)
+                st.success(f"Trade #{delete_index} deleted. Please refresh the page to see changes.")
     else:
         st.warning("⚠️ No data available for the selected filters.")
 else:
