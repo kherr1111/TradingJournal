@@ -38,16 +38,16 @@ if not df.empty:
 
     # Sidebar filters
     st.sidebar.header("Filters")
-    start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
-    end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
-    trade_type_options = df['Trade Type'].dropna().unique().tolist()
-    trade_type_filter = st.sidebar.multiselect(
-        "Trade Type",
-        options=trade_type_options,
-        default=trade_type_options
-    )
+start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
+end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
+trade_type_options = df['Trade Type'].dropna().unique().tolist()
+trade_type_filter = st.sidebar.multiselect(
+    "Trade Type",
+    options=trade_type_options,
+    default=trade_type_options
+)
 
-    filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
+filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
     if not filtered_df.empty:
         # Summary metrics
@@ -109,5 +109,6 @@ if submitted:
     df.sort_values('Date', inplace=True)
     df.to_csv(DATA_FILE, index=False)
     st.success("✅ Trade added successfully!")
+    st.rerun()
 else:
     st.info("👈 Add your first trade using the form above.")
