@@ -71,6 +71,8 @@ if not df.empty:
         st.pyplot(fig)
 
         # Optional: Show raw data
+        st.subheader("📄 Raw Data")
+        st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
 
         # Trade Entry Section at Bottom
         st.subheader("➕ Add New Trade Entry")
