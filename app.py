@@ -52,18 +52,18 @@ if not df.empty:
 
     # Sidebar filters
     st.sidebar.header("Filters")
-start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
-end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
-trade_type_options = df['Trade Type'].dropna().unique().tolist()
-trade_type_filter = st.sidebar.multiselect(
-    "Trade Type",
-    options=trade_type_options,
-    default=trade_type_options
-)
+    start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
+    end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
+    trade_type_options = df['Trade Type'].dropna().unique().tolist()
+    trade_type_filter = st.sidebar.multiselect(
+        "Trade Type",
+        options=trade_type_options,
+        default=trade_type_options
+    )
 
-filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
+    filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
-if not filtered_df.empty:
+    if not filtered_df.empty:
         # Summary metrics
         balance = filtered_df['Balance'].iloc[-1]
         monthly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(months=1)]['PnL'].sum()
@@ -97,7 +97,7 @@ if not filtered_df.empty:
         # Optional: Show raw data
         with st.expander("📄 Raw Data"):
             st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
-else:
-        st.warning("⚠️ No data available for the selected filters.")
     else:
+        st.warning("⚠️ No data available for the selected filters.")
+else:
     st.info("👈 Add your first trade using the form on the left.")
