@@ -63,7 +63,7 @@ if not df.empty:
         "Trade Type",
         options=trade_type_options,
         default=trade_type_options
-    ).tolist(), default=df['Trade Type'].unique().tolist())
+    
 
     filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
