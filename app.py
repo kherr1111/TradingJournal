@@ -68,14 +68,15 @@ if not df.empty:
         winning_trades = len(filtered_df[filtered_df['PnL'] > 0])
         win_rate = (winning_trades / total_trades) * 100 if total_trades > 0 else 0
 
-        # KPI Cards
-        with st.container():
-            col1, col2, col3, col4, col5 = st.columns(5)
-            col1.metric("Balance", f"${balance:,.2f}")
-            col2.metric("PnL This Month", f"${monthly_pnl:,.2f}")
-            col3.metric("PnL This Year", f"${yearly_pnl:,.2f}")
-            col4.metric("Win Rate", f"{win_rate:.2f}%")
-            col5.metric("Total Trades", f"{total_trades}")
+        # KPI Cards in two rows
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Balance", f"${balance:,.2f}")
+        col2.metric("PnL This Month", f"${monthly_pnl:,.2f}")
+        col3.metric("PnL This Year", f"${yearly_pnl:,.2f}")
+
+        col4, col5 = st.columns(2)
+        col4.metric("Win Rate", f"{win_rate:.2f}%")
+        col5.metric("Total Trades", f"{total_trades}")
 
         # PnL Summary Chart as Line Graph
         st.subheader("PnL Over Time")
@@ -94,5 +95,3 @@ if not df.empty:
         st.warning("⚠️ No data available for the selected filters.")
 else:
     st.info("👈 Add your first trade using the form on the left.")
-
-
