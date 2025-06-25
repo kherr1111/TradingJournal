@@ -37,11 +37,11 @@ if not df.empty:
     df.sort_values('Date', inplace=True)
 
     # Sidebar filters
-    st.sidebar.header("Filters")
-    start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
-    end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
+    with st.sidebar.expander("🧰 Filters", expanded=True):
+    start_date = st.date_input("Start Date", value=df['Date'].min().date())
+    end_date = st.date_input("End Date", value=df['Date'].max().date())
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
-    trade_type_filter = st.sidebar.multiselect(
+    trade_type_filter = st.multiselect(
         "Trade Type",
         options=trade_type_options,
         default=trade_type_options
@@ -71,8 +71,8 @@ if not df.empty:
         col5.metric("Total Trades", f"{total_trades}")
 
         # PnL Summary Chart as Line Graph
-        st.subheader("PnL Over Time")
-st.markdown("---")
+        with st.container():
+    st.subheader("PnL Over Time")
         fig, ax = plt.subplots(figsize=(12, 4))
         ax.plot(filtered_df['Date'], filtered_df['PnL'].cumsum(), marker='o', linestyle='-', color='teal', label='Cumulative PnL')
         ax.set_ylabel('Cumulative PnL ($)')
@@ -83,13 +83,17 @@ st.markdown("---")
 
     # Raw data view (always visible)
     st.markdown("---")
-st.subheader("📄 Raw Data")
+with st.container():
+    with st.container():
+    st.subheader("📄 Raw Data")
 st.markdown("---")
-    st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
+        st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
 
 # Trade Entry Section
 st.markdown("---")
-st.subheader("➕ Add New Trade Entry")
+with st.container():
+    with st.container():
+    st.subheader("➕ Add New Trade Entry")
 st.markdown("---")
 with st.form("trade_form"):
     date = st.date_input("Date", value=datetime.today())
