@@ -84,5 +84,3 @@ if not df.empty:
             pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
             balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
             submitted = st.form_submit_button("Add Trade")
-
-        
