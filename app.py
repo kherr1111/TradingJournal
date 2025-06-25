@@ -13,6 +13,10 @@ DATA_FILE = "trades.csv"
 if 'confirm_reset_shown' not in st.session_state:
     st.session_state.confirm_reset_shown = False
 
+st.sidebar.markdown(
+    "<a href='https://example.com' target='_blank'><button style='width: 100%'>🌐 Visit Website</button></a>",
+    unsafe_allow_html=True
+)
 if st.sidebar.button("🔁 Reset All Trades"):
     st.session_state.confirm_reset_shown = True
 
