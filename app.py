@@ -19,20 +19,7 @@ else:
     df = pd.DataFrame(columns=['Date', 'Time', 'Trade Type', 'Description', 'PnL', 'Balance'])
 
 # Add new entry
-if submitted:
-    timestamp = pd.to_datetime(f"{date} {trade_time}")
-    new_row = pd.DataFrame({
-        'Date': [timestamp],
-        'Time': [trade_time.strftime("%H:%M:%S")],
-        'Trade Type': [trade_type],
-        'Description': [description],
-        'PnL': [pnl],
-        'Balance': [balance]
-    })
-    df = pd.concat([df, new_row], ignore_index=True)
-    df.sort_values('Date', inplace=True)
-    df.to_csv(DATA_FILE, index=False)
-    st.success("✅ Trade added successfully!")
+
 
 # Display dashboard if data exists
 if not df.empty:
