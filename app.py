@@ -9,7 +9,7 @@ import os
 RESET_TRIGGER = "Reset Metrics"
 DATA_FILE = "trades.csv"
 
-# Title
+# Reset logic
 if 'confirm_reset_shown' not in st.session_state:
     st.session_state.confirm_reset_shown = False
 
@@ -22,6 +22,8 @@ if st.session_state.confirm_reset_shown:
         if os.path.exists(DATA_FILE):
             os.remove(DATA_FILE)
         st.rerun()
+
+# Title
 st.title("📈 Trading Performance Dashboard")
 
 # Load or create CSV
@@ -38,16 +40,20 @@ if not df.empty:
 
     # Sidebar filters
     with st.sidebar.expander("🧰 Filters", expanded=True):
-    start_date = st.date_input("Start Date", value=df['Date'].min().date())
-    end_date = st.date_input("End Date", value=df['Date'].max().date())
-    trade_type_options = df['Trade Type'].dropna().unique().tolist()
-    trade_type_filter = st.multiselect(
-        "Trade Type",
-        options=trade_type_options,
-        default=trade_type_options
-    )
+        start_date = st.date_input("Start Date", value=df['Date'].min().date())
+        end_date = st.date_input("End Date", value=df['Date'].max().date())
+        trade_type_options = df['Trade Type'].dropna().unique().tolist()
+        trade_type_filter = st.multiselect(
+            "Trade Type",
+            options=trade_type_options,
+            default=trade_type_options
+        )
 
-    filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
+    filtered_df = df[
+        (df['Date'] >= pd.to_datetime(start_date)) &
+        (df['Date'] <= pd.to_datetime(end_date)) &
+        (df['Trade Type'].isin(trade_type_filter))
+    ]
 
     if not filtered_df.empty:
         # Summary metrics
@@ -72,36 +78,30 @@ if not df.empty:
 
         # PnL Summary Chart as Line Graph
         with st.container():
-    st.subheader("PnL Over Time")
-        fig, ax = plt.subplots(figsize=(12, 4))
-        ax.plot(filtered_df['Date'], filtered_df['PnL'].cumsum(), marker='o', linestyle='-', color='teal', label='Cumulative PnL')
-        ax.set_ylabel('Cumulative PnL ($)')
-        ax.set_xlabel('Date')
-        ax.axhline(0, color='black', linewidth=0.8)
-        ax.legend()
-        st.pyplot(fig)
+            st.subheader("PnL Over Time")
+            fig, ax = plt.subplots(figsize=(12, 4))
+            ax.plot(filtered_df['Date'], filtered_df['PnL'].cumsum(), marker='o', linestyle='-', color='teal', label='Cumulative PnL')
+            ax.set_ylabel('Cumulative PnL ($)')
+            ax.set_xlabel('Date')
+            ax.axhline(0, color='black', linewidth=0.8)
+            ax.legend()
+            st.pyplot(fig)
 
-    # Raw data view (always visible)
-    st.markdown("---")
-with st.container():
+    # Raw data view
     with st.container():
-    st.subheader("📄 Raw Data")
-st.markdown("---")
+        st.subheader("📄 Raw Data")
         st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
 
 # Trade Entry Section
-st.markdown("---")
 with st.container():
-    with st.container():
     st.subheader("➕ Add New Trade Entry")
-st.markdown("---")
+
 with st.form("trade_form"):
     date = st.date_input("Date", value=datetime.today())
     trade_time = st.time_input("Time", value=datetime.now().time())
     trade_type = st.selectbox("Trade Type", ["Long", "Short"])
     description = st.text_input("Description")
     pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
-    # balance input removed; it will be calculated
     submitted = st.form_submit_button("Add Trade")
 
 if submitted:
