@@ -11,9 +11,11 @@ DATA_FILE = "trades.csv"
 
 # Title
 if st.sidebar.button("🔁 Reset All Trades"):
-    if os.path.exists(DATA_FILE):
-        os.remove(DATA_FILE)
-    st.rerun()
+    confirm = st.sidebar.checkbox("Confirm reset?")
+    if confirm:
+        if os.path.exists(DATA_FILE):
+            os.remove(DATA_FILE)
+        st.rerun()
 st.title("📈 Trading Performance Dashboard")
 
 # Load or create CSV
