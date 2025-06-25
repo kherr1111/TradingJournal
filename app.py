@@ -13,7 +13,7 @@ DATA_FILE = "trades.csv"
 if st.sidebar.button("🔁 Reset All Trades"):
     if os.path.exists(DATA_FILE):
         os.remove(DATA_FILE)
-    st.experimental_rerun()
+    st.rerun()
 st.title("📈 Trading Performance Dashboard")
 
 # Load or create CSV
