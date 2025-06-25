@@ -86,3 +86,4 @@ if not df.empty:
         st.warning("⚠️ No data available for the selected date range.")
 else:
     st.info("👈 Add your first trade using the form on the left.")
+    
