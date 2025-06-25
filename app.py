@@ -83,23 +83,4 @@ if not df.empty:
             balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
             submitted = st.form_submit_button("Add Trade")
 
-        if submitted:
-            timestamp = pd.to_datetime(f"{date} {trade_time}")
-            new_row = pd.DataFrame({
-                'Date': [timestamp],
-                'Time': [trade_time.strftime("%H:%M:%S")],
-                'Trade Type': [trade_type],
-                'Description': [description],
-                'PnL': [pnl],
-                'Balance': [balance]
-            })
-            df = pd.concat([df, new_row], ignore_index=True)
-            df.sort_values('Date', inplace=True)
-            df.to_csv(DATA_FILE, index=False)
-            st.success("✅ Trade added successfully!")
-        with st.expander("📄 Raw Data"):
-            st.dataframe(filtered_df.reset_index(drop=True).rename(lambda x: x + 1))
-    else:
-        st.warning("⚠️ No data available for the selected filters.")
-else:
-    st.info("👈 Add your first trade using the form on the left.")
+        
