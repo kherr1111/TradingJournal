@@ -60,9 +60,9 @@ trade_type_filter = st.sidebar.multiselect(
     options=trade_type_options,
     default=trade_type_options
 )
-        "Trade Type",
-        options=trade_type_options,
-        default=trade_type_options
+    "Trade Type",
+     options=trade_type_options,
+     default=trade_type_options
     
 
     filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
