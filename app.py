@@ -16,6 +16,7 @@ st.sidebar.header("Add New Trade Entry")
 with st.sidebar.form("trade_form"):
     date = st.date_input("Date", value=datetime.today())
     trade_time = st.time_input("Time", value=datetime.now().time())
+    trade_type = st.selectbox("Trade Type", ["Long", "Short"])
     description = st.text_input("Description")
     pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
     balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
@@ -25,7 +26,7 @@ with st.sidebar.form("trade_form"):
 if os.path.exists(DATA_FILE):
     df = pd.read_csv(DATA_FILE, parse_dates=['Date'])
 else:
-    df = pd.DataFrame(columns=['Date', 'Time', 'Description', 'PnL', 'Balance'])
+    df = pd.DataFrame(columns=['Date', 'Time', 'Trade Type', 'Description', 'PnL', 'Balance'])
 
 # Add new entry
 if submitted:
@@ -33,6 +34,7 @@ if submitted:
     new_row = pd.DataFrame({
         'Date': [timestamp],
         'Time': [trade_time.strftime("%H:%M:%S")],
+        'Trade Type': [trade_type],
         'Description': [description],
         'PnL': [pnl],
         'Balance': [balance]
