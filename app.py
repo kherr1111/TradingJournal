@@ -39,8 +39,7 @@ if not df.empty:
     # Sidebar filters
     st.sidebar.markdown("---")
 st.sidebar.header("Filters")
-st.sidebar.markdown("---")
-    start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
+start_date = st.sidebar.date_input("Start Date", value=df['Date'].min().date())
     end_date = st.sidebar.date_input("End Date", value=df['Date'].max().date())
     trade_type_options = df['Trade Type'].dropna().unique().tolist()
     trade_type_filter = st.sidebar.multiselect(
