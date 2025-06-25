@@ -79,7 +79,7 @@ with st.form("trade_form"):
     trade_type = st.selectbox("Trade Type", ["Long", "Short"])
     description = st.text_input("Description")
     pnl = st.number_input("PnL ($)", step=0.01, format="%.2f")
-    balance = st.number_input("Balance ($)", step=0.01, format="%.2f")
+    # balance input removed; it will be calculated
     submitted = st.form_submit_button("Add Trade")
 
 if submitted:
@@ -90,7 +90,7 @@ if submitted:
         'Trade Type': [trade_type],
         'Description': [description],
         'PnL': [pnl],
-        'Balance': [balance]
+        'Balance': [df['Balance'].iloc[-1] + pnl if not df.empty else pnl]
     })
     df = pd.concat([df, new_row], ignore_index=True)
     df.sort_values('Date', inplace=True)
