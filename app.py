@@ -63,7 +63,7 @@ trade_type_filter = st.sidebar.multiselect(
 
 filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date)) & (df['Trade Type'].isin(trade_type_filter))]
 
-    if not filtered_df.empty:
+if not filtered_df.empty:
         # Summary metrics
         balance = filtered_df['Balance'].iloc[-1]
         monthly_pnl = filtered_df[filtered_df['Date'] >= pd.Timestamp.now() - pd.DateOffset(months=1)]['PnL'].sum()
